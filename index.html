@@ -1,0 +1,36 @@
+[index.html]
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Pizza</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Calculadora de Pizza</h2>
+        <div class="input-group">
+            <label>Preço da Pizza: R$ <input type="number" id="precoPizza" value="40"></label>
+            <label>Frete: R$ <input type="number" id="frete" value="5"></label>
+            <label>Refrigerante: R$ <input type="number" id="refrigerante" value="10"></label>
+        </div>
+        <h3>Pessoas e Pedaços</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Pedaços</th>
+                </tr>
+            </thead>
+            <tbody id="listaPessoas"></tbody>
+        </table>
+        <button onclick="adicionarPessoa()">Adicionar Pessoa</button>
+        <button onclick="calcular()">Calcular</button>
+        <button onclick="salvarPDF()">Salvar em PDF</button>
+        <h3>Resultados</h3>
+        <div id="resultado"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
