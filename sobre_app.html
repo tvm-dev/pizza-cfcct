@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre o APP</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #000000); /* Degradê moderno com azul e preto */
+            color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Estilo do Conteúdo */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px;
+            text-align: center;
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.8); /* Fundo branco translúcido */
+            border-radius: 10px;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #16a085;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            color: #0e0d0d;
+        }
+
+        .signature {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        /* Estilo do Contato */
+        .contato {
+            background-color: rgba(90, 163, 236, 0.9);
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 40px;
+            flex-direction: column;
+        }
+
+        .contato h3 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .contato p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .contato a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            font-size: 1.2em;
+            margin: 5px 0;
+        }
+
+        .contato img {
+            width: 25px;
+            height: 25px;
+            margin-right: 10px;
+        }
+
+        /* Estilo do rodapé */
+        footer {
+            background-color: #1e3c72;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            width: 100%;
+            bottom: 0;
+        }
+
+        /* Estilo do botão de voltar */
+        .back-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #1f6d8f;
+        }
+
+        /* Responsividade */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            .contato h3 {
+                font-size: 1.8em;
+            }
+
+            .contato p {
+                font-size: 1.1em;
+            }
+
+            .contato a {
+                font-size: 1em;
+            }
+
+            footer {
+                padding: 10px;
+            }
+        }
+
+        /* Responsividade para dispositivos móveis */
+        @media screen and (max-width: 480px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.6em;
+            }
+
+            p {
+                font-size: 0.9em;
+            }
+
+            .contato h3 {
+                font-size: 1.6em;
+            }
+
+            .contato a {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sobre o APP</h1>
+        <h2>Calculadora De Pizza</h2>
+        <p>Sobre o App - Calculadora de Pizza
+           
+Sobre o App - Calculadora de Pizza
+A Calculadora de Pizza é uma ferramenta simples e eficiente para calcular o valor total de uma compra de pizza, incluindo preço, frete e adicionais. Ela facilita a divisão do custo entre os participantes, calculando automaticamente o número de pizzas necessárias e a quantidade de pedaços para cada pessoa.
+
+Benefícios
+Economia de Tempo: Evita cálculos manuais.
+Cálculos Precisos: Divisão justa entre os participantes.
+Praticidade: Salve os cálculos em PDF.
+Fácil de Usar: Rápido e intuitivo.
+A Calculadora de Pizza torna a compra de pizza mais fácil e organizada para grupos de amigos ou família.
+            </p>
+        <p class="signature">Calculadora de Pizza</p>
+    </div>
+    <button onclick="window.location.href='index.html'">Bora Calcular a Pizza</button>
+
+   
+
+    <!-- Botão Voltar -->
+    <a href="index.html" class="back-button" title="Voltar">
+        ←
+        
+    </a>
+</body>
+</html>

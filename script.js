@@ -1,47 +1,36 @@
-function adicionarPessoa() {
-    const tabela = document.getElementById("listaPessoas");
-    const linha = document.createElement("tr");
-    linha.innerHTML = `
-        <td><input type="text" placeholder="Nome"></td>
-        <td><input type="number" min="1" value="1"></td>
-    `;
-    tabela.appendChild(linha);
-}
-
-function calcular() {
-    const precoPizza = parseFloat(document.getElementById("precoPizza").value) || 0;
-    const frete = parseFloat(document.getElementById("frete").value) || 0;
-    const refrigerante = parseFloat(document.getElementById("refrigerante").value) || 0;
-    
-    let totalPecas = 0;
-    let pessoas = [];
-    document.querySelectorAll("#listaPessoas tr").forEach(linha => {
-        const nome = linha.children[0].children[0].value.trim();
-        const pedacos = parseInt(linha.children[1].children[0].value) || 0;
-        if (nome && pedacos > 0) {
-            pessoas.push({ nome, pedacos });
-            totalPecas += pedacos;
-        }
-    });
-    
-    const totalPizzas = Math.ceil(totalPecas / 8);
-    const custoTotal = totalPizzas * precoPizza + frete + refrigerante;
-    
-    let resultadoTexto = `<strong>Total de pedaços:</strong> ${totalPecas}<br>`;
-    resultadoTexto += `<strong>Quantidade de pizzas:</strong> ${totalPizzas}<br>`;
-    resultadoTexto += `<strong>Custo total:</strong> R$ ${custoTotal.toFixed(2)}<br><br>`;
-    resultadoTexto += `<strong>Divisão por pessoa:</strong><br>`;
-    
-    pessoas.forEach(p => {
-        const valorPorPedaco = custoTotal / totalPecas;
-        const valorPessoa = p.pedacos * valorPorPedaco;
-        resultadoTexto += `${p.nome} paga: R$ ${valorPessoa.toFixed(2)}<br>`;
-    });
-    
-    document.getElementById("resultado").innerHTML = resultadoTexto;
-}
-
 function salvarPDF() {
-    const elemento = document.querySelector(".container");
-    html2pdf().from(elemento).save("Divisao_Pizza.pdf");
+    alert("Bom apetite e volte sempre para calcular mais pizzas!");
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFont('helvetica');
+    doc.setTextColor(255, 255, 255);
+    doc.setFillColor(33, 150, 243); 
+    doc.rect(0, 0, 210, 297, 'F');
+    doc.setTextColor(255, 255, 255); 
+
+    doc.setFontSize(22);
+    doc.text('Calculadora de Pizza - Resultado', 105, 30, null, null, 'center');
+
+    doc.setFontSize(14);
+    doc.text(`Total de pessoas: ${listaPessoas.length}`, 20, 50);
+    doc.text(`Total de pedaços: ${listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0)}`, 20, 60);
+    doc.text(`Total de pizzas necessárias: ${Math.ceil(listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0) / 8)}`, 20, 70);
+    doc.text(`Valor total: R$ ${(listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0) / 8 * (parseFloat(document.getElementById('precoPizza').value) + parseFloat(document.getElementById('frete').value) + parseFloat(document.getElementById('refrigerante').value))).toFixed(2)}`, 20, 80);
+
+    // Adiciona um fundo estilizado e uma mensagem moderna
+    doc.setFillColor(255, 87, 34); // Laranja vibrante para o fundo
+    doc.rect(15, 170, 180, 30, 'F'); 
+
+    doc.setTextColor(255, 255, 255); // Cor do texto
+    doc.setFontSize(16);
+    doc.setFont('sans-serif');
+    doc.text('Bom apetite e volte sempre para calcular mais pizzas!', 20, 190);
+
+    // Adicionando sombra no texto para um efeito mais moderno
+    doc.setTextColor(0, 0, 0); // Cor da sombra
+    doc.text('Bom apetite e volte sempre para calcular mais pizzas!', 22, 192); // Sombra deslocada
+
+    doc.save('relatorio_calculadora_pizza_moderno.pdf');
 }

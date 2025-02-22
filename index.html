@@ -1,38 +1,301 @@
-[index.html]
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Pizza</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            padding: 20px;
+            margin: 0;
+            color: #120e0e;
+        }
+        .container {
+            max-width: 600px;
+            background: #c7eef0;
+            padding: 30px;
+            margin: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .input-group label {
+            display: block;
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+            color: #100808;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: 2px solid #0e7abd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            background: linear-gradient(45deg, #46e8ee, #1b67eb);
+            color: #fefdfe;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: linear-gradient(45deg, #3e394a, #4a0547);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #679ff9;
+            padding: 12px;
+            font-size: 16px;
+        }
+        th {
+            background-color: #007bff;
+            color: rgb(250, 248, 248);
+        }
+        #resultado {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            font-size: 18px;
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            font-size: 14px;
+            color: #f0e6e6;
+            margin-top: 30px;
+        }
+        
+        /* Modal de Adição de Pessoa */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .modal-content input {
+            width: 80%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 2px solid #0e7abd;
+            font-size: 16px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Estilo para o botão Limpar Tabela */
+        #limparTabela {
+            margin-top: 10px;
+            padding: 8px;
+            width: 100%;
+            background: linear-gradient(45deg, #f44336, #d32f2f);
+            color: #fefdfe;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #limparTabela:hover {
+            background: linear-gradient(45deg, #c62828, #b71c1c);
+        }
+
+        /* Estilo da imagem */
+        .logo {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            left: 20px;
+            top: 30px;
+            transition: transform 2s ease-in-out;
+        }
+
+        /* Movimento da imagem com o comando em JavaScript */
+        .moverLogo {
+            transform: translateX(400px); /* Mova a imagem para a direita */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <img class="logo" src="https://play-lh.googleusercontent.com/RtNN_ny-8YJb9jpvdxkmG3Cc7gGep-kKCJxPOJOj-W6uk7SqLge2UsgZXFn25-APAhH2" alt="Logo">
         <h2>Calculadora de Pizza</h2>
         <div class="input-group">
-            <label>Preço da Pizza: R$ <input type="number" id="precoPizza" value="40"></label>
-            <label>Frete: R$ <input type="number" id="frete" value="5"></label>
-            <label>Refrigerante: R$ <input type="number" id="refrigerante" value="10"></label>
+            <label for="precoPizza">Preço da Pizza: R$</label>
+            <input type="number" id="precoPizza" value="40">
         </div>
+        <div class="input-group">
+            <label for="frete">Frete: R$</label>
+            <input type="number" id="frete" value="5">
+        </div>
+        <div class="input-group">
+            <label for="refrigerante">Refrigerante: R$</label>
+            <input type="number" id="refrigerante" value="10">
+        </div>
+
         <h3>Pessoas e Pedaços</h3>
         <table>
             <thead>
                 <tr>
                     <th>Nome</th>
                     <th>Pedaços</th>
+                    <th>Valor a Pagar (R$)</th>
                 </tr>
             </thead>
             <tbody id="listaPessoas"></tbody>
         </table>
-        <button onclick="adicionarPessoa()">Adicionar Pessoa</button>
+        <button onclick="mostrarModal()">Adicionar Pessoa</button>
         <button onclick="calcular()">Calcular</button>
         <button onclick="salvarPDF()">Salvar em PDF</button>
-        <h3>Resultados</h3>
+
         <div id="resultado"></div>
+
+        <button onclick="window.location.href='sobre_app.html'">Sobre o App</button>
+        <button onclick="window.location.href='sobre_desenvolvedor.html'">Sobre o Desenvolvedor</button>
+
+        <!-- Botão Limpar Tabela abaixo da tabela de pessoas -->
+        <button id="limparTabela" onclick="limparTabela()">Limpar Tabela</button>
     </div>
-    <hr>
-    <footer>Professor Thiago <a href="https://thiago.grupokhan.com.br" target="_blank">Clique para acessar o site.</a></footer>
-    <script src="script.js"></script>
+
+    <footer>
+        Professor Thiago - <a href="https://thiago.grupokhan.com.br" target="_blank" style="color: #fff;">Clique para acessar o site</a>
+    </footer>
+
+    <!-- Modal para adicionar pessoa -->
+    <div id="modalPessoa" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal()">&times;</span>
+            <h3>Adicionar Pessoa</h3>
+            <input type="text" id="nomePessoa" placeholder="Digite o nome da pessoa">
+            <input type="number" id="pedacosPessoa" placeholder="Quantos pedaços a pessoa vai comer?">
+            <button onclick="adicionarPessoaModal()">Adicionar</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        let listaPessoas = [];
+
+        function mostrarModal() {
+            document.getElementById('modalPessoa').style.display = "block";
+        }
+
+        function fecharModal() {
+            document.getElementById('modalPessoa').style.display = "none";
+        }
+
+        function adicionarPessoaModal() {
+            const nome = document.getElementById('nomePessoa').value;
+            const pedacos = parseInt(document.getElementById('pedacosPessoa').value);
+            if (nome && !isNaN(pedacos)) {
+                listaPessoas.push({ nome, pedaços: pedacos });
+                const tabela = document.getElementById('listaPessoas');
+                const novaLinha = document.createElement('tr');
+                novaLinha.innerHTML = `<td>${nome}</td><td>${pedacos}</td><td>R$ 0,00</td>`;
+                tabela.appendChild(novaLinha);
+                fecharModal(); // Fecha o modal após adicionar
+            } else {
+                alert("Por favor, insira um nome válido e a quantidade de pedaços.");
+            }
+        }
+
+        function calcular() {
+            const precoPizza = parseFloat(document.getElementById('precoPizza').value);
+            const frete = parseFloat(document.getElementById('frete').value);
+            const refrigerante = parseFloat(document.getElementById('refrigerante').value);
+            const totalPedaços = listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0);
+            const totalPizzas = Math.ceil(totalPedaços / 8);
+            const valorTotal = (precoPizza + frete + refrigerante) * totalPizzas;
+
+            listaPessoas.forEach(pessoa => {
+                pessoa.valor = (precoPizza * pessoa.pedaços / 8) + (frete / totalPizzas) + (refrigerante / totalPizzas);
+            });
+
+            const totalPedaçosFaltando = (totalPizzas * 8) - totalPedaços;
+            const pedacosFaltandoMensagem = totalPedaçosFaltando > 0 
+                ? `Ainda faltam ${totalPedaçosFaltando} pedaços para a próxima pizza!`
+                : 'Não faltam pedaços para a próxima pizza!';
+
+            document.getElementById('resultado').innerHTML = ` 
+                <p>Total de pessoas: ${listaPessoas.length}</p>
+                <p>Total de pedaços: ${totalPedaços}</p>
+                <p>Total de pizzas necessárias: ${totalPizzas}</p>
+                <p>Valor total: R$ ${valorTotal.toFixed(2)}</p>
+                <p>${pedacosFaltandoMensagem}</p>`;
+
+            atualizarTabela();
+        }
+
+        function atualizarTabela() {
+            const tabela = document.getElementById('listaPessoas');
+            tabela.innerHTML = "";
+            listaPessoas.forEach(pessoa => {
+                const novaLinha = document.createElement('tr');
+                novaLinha.innerHTML = `<td>${pessoa.nome}</td><td>${pessoa.pedaços}</td><td>R$ ${pessoa.valor.toFixed(2)}</td>`;
+                tabela.appendChild(novaLinha);
+            });
+        }
+
+        function salvarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text('Calculadora de Pizza', 10, 10);
+            doc.autoTable({ html: 'table' });
+            doc.save('tabela_pizza.pdf');
+        }
+
+        function limparTabela() {
+            listaPessoas = [];
+            document.getElementById('listaPessoas').innerHTML = "";
+            document.getElementById('resultado').innerHTML = "";
+        }
+    </script>
 </body>
 </html>
