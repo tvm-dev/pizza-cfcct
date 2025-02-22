@@ -157,6 +157,11 @@
             transition: transform 2s ease-in-out;
         }
 
+        /* Ajuste para a imagem e o título */
+        h2 {
+            margin-top: 130px; /* Ajuste para dar um espaçamento adequado */
+        }
+
         /* Movimento da imagem com o comando em JavaScript */
         .moverLogo {
             transform: translateX(400px); /* Mova a imagem para a direita */
@@ -169,15 +174,15 @@
         <h2>Calculadora de Pizza</h2>
         <div class="input-group">
             <label for="precoPizza">Preço da Pizza: R$</label>
-            <input type="number" id="precoPizza" value="40">
+            <input type="number" id="precoPizza" placeholder="Digite o preço da pizza">
         </div>
         <div class="input-group">
             <label for="frete">Frete: R$</label>
-            <input type="number" id="frete" value="5">
+            <input type="number" id="frete" placeholder="Digite o valor do frete">
         </div>
         <div class="input-group">
             <label for="refrigerante">Refrigerante: R$</label>
-            <input type="number" id="refrigerante" value="10">
+            <input type="number" id="refrigerante" placeholder="Digite o valor do refrigerante">
         </div>
 
         <h3>Pessoas e Pedaços</h3>
@@ -238,7 +243,7 @@
                 listaPessoas.push({ nome, pedaços: pedacos });
                 const tabela = document.getElementById('listaPessoas');
                 const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `<td>${nome}</td><td>${pedacos}</td><td>R$ 0,00</td>`;
+                novaLinha.innerHTML = `<td>${nome}</td><td>${pedacos}</td><td>R$ 0,00</td>`; 
                 tabela.appendChild(novaLinha);
                 fecharModal(); // Fecha o modal após adicionar
             } else {
@@ -263,8 +268,8 @@
                 ? `Ainda faltam ${totalPedaçosFaltando} pedaços para a próxima pizza!`
                 : 'Não faltam pedaços para a próxima pizza!';
 
-            document.getElementById('resultado').innerHTML = ` 
-                <p>Total de pessoas: ${listaPessoas.length}</p>
+            document.getElementById('resultado').innerHTML =  
+                `<p>Total de pessoas: ${listaPessoas.length}</p>
                 <p>Total de pedaços: ${totalPedaços}</p>
                 <p>Total de pizzas necessárias: ${totalPizzas}</p>
                 <p>Valor total: R$ ${valorTotal.toFixed(2)}</p>
