@@ -224,6 +224,7 @@
         </div>
     </div>
 
+    <!-- Corrigir a inclusão da CDN do jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         let listaPessoas = [];
@@ -309,15 +310,10 @@
             doc.text(`Valor total: R$ ${(listaPessoas.reduce((acc, pessoa) => acc + pessoa.valor, 0)).toFixed(2)}`, 20, 50);
 
             listaPessoas.forEach((pessoa, index) => {
-                doc.text(`${index + 1}. ${pessoa.nome} - Pedaços: ${pessoa.pedaços} - R$ ${pessoa.valor.toFixed(2)}`, 20, 60 + index * 10);
+                doc.text(`${index + 1}. ${pessoa.nome} - ${pessoa.pedaços} pedaços - R$ ${pessoa.valor.toFixed(2)}`, 20, 60 + (index * 10));
             });
 
-            // Mensagem de agradecimento
-            doc.setFontSize(16);
-            doc.text("Obrigado por usar o aplicativo! Bom apetite!", 20, 60 + listaPessoas.length * 10);
-
-            // Gerar e salvar o PDF
-            doc.save("calculadora_pizza.pdf");
+            doc.save('relatorio_pizza.pdf');
         }
     </script>
 </body>
