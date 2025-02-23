@@ -1,36 +1,44 @@
 function salvarPDF() {
-    alert("Bom apetite e volte sempre para calcular mais pizzas!");
-
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    doc.setFont('helvetica');
-    doc.setTextColor(255, 255, 255);
-    doc.setFillColor(33, 150, 243); 
-    doc.rect(0, 0, 210, 297, 'F');
-    doc.setTextColor(255, 255, 255); 
+    // Definindo a fonte e o estilo
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(24);
+    doc.setTextColor(44, 62, 80); // Cor moderna (cinza escuro)
+    doc.text("🍕 Calculadora de Pizza 🍕", 20, 20);
 
-    doc.setFontSize(22);
-    doc.text('Calculadora de Pizza - Resultado', 105, 30, null, null, 'center');
+    doc.setFontSize(18);
+    doc.setTextColor(52, 152, 219); // Cor azul moderna
+    doc.text(`Total de pessoas: ${listaPessoas.length}`, 20, 30);
+    doc.text(`Total de pizzas: ${Math.ceil(listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0) / 8)}`, 20, 40);
+    doc.text(`Valor total: R$ ${(listaPessoas.reduce((acc, pessoa) => acc + pessoa.valor, 0)).toFixed(2)}`, 20, 50);
 
-    doc.setFontSize(14);
-    doc.text(`Total de pessoas: ${listaPessoas.length}`, 20, 50);
-    doc.text(`Total de pedaços: ${listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0)}`, 20, 60);
-    doc.text(`Total de pizzas necessárias: ${Math.ceil(listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0) / 8)}`, 20, 70);
-    doc.text(`Valor total: R$ ${(listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0) / 8 * (parseFloat(document.getElementById('precoPizza').value) + parseFloat(document.getElementById('frete').value) + parseFloat(document.getElementById('refrigerante').value))).toFixed(2)}`, 20, 80);
-
-    // Adiciona um fundo estilizado e uma mensagem moderna
-    doc.setFillColor(255, 87, 34); // Laranja vibrante para o fundo
-    doc.rect(15, 170, 180, 30, 'F'); 
-
-    doc.setTextColor(255, 255, 255); // Cor do texto
     doc.setFontSize(16);
-    doc.setFont('sans-serif');
-    doc.text('Bom apetite e volte sempre para calcular mais pizzas!', 20, 190);
+    doc.setTextColor(231, 76, 60); // Cor vermelha para destaque
+    listaPessoas.forEach((pessoa, index) => {
+        doc.text(`${index + 1}. ${pessoa.nome} - Pedaços: ${pessoa.pedaços} - R$ ${pessoa.valor.toFixed(2)}`, 20, 60 + index * 10);
+    });
 
-    // Adicionando sombra no texto para um efeito mais moderno
-    doc.setTextColor(0, 0, 0); // Cor da sombra
-    doc.text('Bom apetite e volte sempre para calcular mais pizzas!', 22, 192); // Sombra deslocada
+    // Adicionando uma mensagem de agradecimento e boa refeição
+    doc.setFontSize(18);
+    doc.setTextColor(39, 174, 96); // Cor verde moderna para agradecer
+    doc.text("🎉 Obrigado por usar a Calculadora de Pizza! 🍕", 20, 80 + listaPessoas.length * 10);
+    doc.text("Bom apetite! 😋", 20, 90 + listaPessoas.length * 10);
 
-    doc.save('relatorio_calculadora_pizza_moderno.pdf');
+    // Adicionando ícones modernos
+    const iconX = 150;
+    const iconY = 20;
+    doc.addImage("https://cdn-icons-png.flaticon.com/512/100/100092.png", "PNG", iconX, iconY, 20, 20); // Ícone de pizza
+    doc.addImage("https://cdn-icons-png.flaticon.com/512/61/61388.png", "PNG", iconX + 30, iconY, 20, 20); // Ícone de check
+
+    // Personalizando o fundo com um gradiente de cores modernas
+    const gradient = doc.createLinearGradient(0, 0, 0, 100);
+    gradient.addColorStop(0, "rgba(52, 152, 219, 1)"); // Azul claro
+    gradient.addColorStop(1, "rgba(231, 76, 60, 1)"); // Vermelho
+    doc.setFillColor(gradient);
+    doc.rect(0, 0, 210, 297, 'F'); // Preenchendo o fundo com o gradiente
+
+    // Salvando o PDF
+    doc.save("calculadora_pizza_ultra_moderno.pdf");
 }

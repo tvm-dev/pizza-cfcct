@@ -80,7 +80,7 @@
             color: #f0e6e6;
             margin-top: 30px;
         }
-        
+
         /* Modal de Adição de Pessoa */
         .modal {
             display: none;
@@ -273,7 +273,7 @@
                 <p>Total de pedaços: ${totalPedaços}</p>
                 <p>Total de pizzas necessárias: ${totalPizzas}</p>
                 <p>Valor total: R$ ${valorTotal.toFixed(2)}</p>
-                <p>${pedacosFaltandoMensagem}</p>`;
+                <p>${pedacosFaltandoMensagem}</p>`; 
 
             atualizarTabela();
         }
@@ -288,18 +288,36 @@
             });
         }
 
-        function salvarPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text('Calculadora de Pizza', 10, 10);
-            doc.autoTable({ html: 'table' });
-            doc.save('tabela_pizza.pdf');
-        }
-
         function limparTabela() {
             listaPessoas = [];
             document.getElementById('listaPessoas').innerHTML = "";
             document.getElementById('resultado').innerHTML = "";
+        }
+
+        function salvarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Personalizando a fonte e o estilo
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(24);
+            doc.text("Calculadora de Pizza", 20, 20);
+            
+            doc.setFontSize(18);
+            doc.text(`Total de pessoas: ${listaPessoas.length}`, 20, 30);
+            doc.text(`Total de pizzas: ${Math.ceil(listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0) / 8)}`, 20, 40);
+            doc.text(`Valor total: R$ ${(listaPessoas.reduce((acc, pessoa) => acc + pessoa.valor, 0)).toFixed(2)}`, 20, 50);
+
+            listaPessoas.forEach((pessoa, index) => {
+                doc.text(`${index + 1}. ${pessoa.nome} - Pedaços: ${pessoa.pedaços} - R$ ${pessoa.valor.toFixed(2)}`, 20, 60 + index * 10);
+            });
+
+            // Mensagem de agradecimento
+            doc.setFontSize(16);
+            doc.text("Obrigado por usar o aplicativo! Bom apetite!", 20, 60 + listaPessoas.length * 10);
+
+            // Gerar e salvar o PDF
+            doc.save("calculadora_pizza.pdf");
         }
     </script>
 </body>
