@@ -269,32 +269,38 @@
             const precoPizza = parseFloat(document.getElementById('precoPizza').value);
             const frete = parseFloat(document.getElementById('frete').value);
             const refrigerante = parseFloat(document.getElementById('refrigerante').value);
+            
+            // Total de pedaços consumidos
             const totalPedaços = listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0);
-            const totalPizzas = Math.ceil(totalPedaços / 8);
-            const valorTotal = (precoPizza + frete + refrigerante) * totalPizzas;
+            // Calcular o total de pizzas necessárias
+            const totalPizzas = Math.ceil(totalPedaços / 8); 
+            
+            // Cálculo do preço total (pizza + frete + refrigerante)
+            const valorPizzaPorPessoa = precoPizza / 8; // Preço por pedaço
+            const valorFretePorPessoa = frete / totalPizzas;
+            const valorRefrigerantePorPessoa = refrigerante / totalPizzas;
 
+            // Preencher o valor para cada pessoa
             listaPessoas.forEach(pessoa => {
-                pessoa.valor = (precoPizza * pessoa.pedaços / 8) + (frete / totalPizzas) + (refrigerante / totalPizzas);
+                pessoa.valor = (valorPizzaPorPessoa * pessoa.pedaços) + valorFretePorPessoa + valorRefrigerantePorPessoa;
             });
 
+            // Mensagem sobre a quantidade de pedaços
             const totalPedaçosFaltando = (totalPizzas * 8) - totalPedaços;
-            const pedacosFaltandoMensagem = totalPedaçosFaltando > 0 
-                ? `Ainda faltam ${totalPedaçosFaltando} pedaços para a próxima pizza!`
-                : 'Não faltam pedaços para a próxima pizza!';
-
-            document.getElementById('resultado').innerHTML =  
-                `<p>Total de pessoas: ${listaPessoas.length}</p>
-                <p>Total de pedaços: ${totalPedaços}</p>
-                <p>Total de pizzas necessárias: ${totalPizzas}</p>
-                <p>Valor total: R$ ${valorTotal.toFixed(2)}</p>
-                <p>${pedacosFaltandoMensagem}</p>`; 
-
+            const mensagem = totalPedaçosFaltando > 0 ? `Faltam ${totalPedaçosFaltando} pedaços para a pizza ser completa.` : "A pizza está completa!";
+            let resultado = `<strong>Total de pizzas: ${totalPizzas}</strong><br>${mensagem}<br><br>`;
+            
+            listaPessoas.forEach((pessoa, index) => {
+                resultado += `<strong>${pessoa.nome}</strong> vai pagar R$ ${pessoa.valor.toFixed(2)} por ${pessoa.pedaços} pedaços.<br>`;
+            });
+            
+            document.getElementById('resultado').innerHTML = resultado;
             atualizarTabela();
         }
 
         function atualizarTabela() {
             const tabela = document.getElementById('listaPessoas');
-            tabela.innerHTML = "";
+            tabela.innerHTML = ''; // Limpa a tabela
             listaPessoas.forEach((pessoa, index) => {
                 const novaLinha = document.createElement('tr');
                 novaLinha.innerHTML = `<td>${pessoa.nome}</td><td>${pessoa.pedaços}</td><td>R$ ${pessoa.valor.toFixed(2)}</td><td><button onclick="editarPessoa(${index})">Editar</button></td>`;
@@ -302,21 +308,21 @@
             });
         }
 
-        function limparTabela() {
-            listaPessoas = [];
-            document.getElementById('listaPessoas').innerHTML = "";
-            document.getElementById('resultado').innerHTML = "";
-        }
-
         function salvarPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             doc.text("Relatório de Pizza", 20, 10);
-            doc.text(`Total de pessoas: ${listaPessoas.length}`, 20, 20);
+            doc.text(`Total de pizzas: ${Math.ceil(listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0) / 8)}`, 20, 20);
             listaPessoas.forEach((pessoa, index) => {
                 doc.text(`Pessoa ${index + 1}: ${pessoa.nome} - ${pessoa.pedaços} pedaços - R$ ${pessoa.valor.toFixed(2)}`, 20, 30 + index * 10);
             });
             doc.save("relatorio_pizza.pdf");
+        }
+
+        function limparTabela() {
+            listaPessoas = [];
+            atualizarTabela();
+            document.getElementById('resultado').innerHTML = '';
         }
     </script>
 </body>
