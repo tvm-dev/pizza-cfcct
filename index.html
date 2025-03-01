@@ -243,7 +243,7 @@
             const nome = document.getElementById('nomePessoa').value;
             const pedacos = parseInt(document.getElementById('pedacosPessoa').value);
             if (nome && !isNaN(pedacos)) {
-                listaPessoas.push({ nome, pedaços: pedacos, pago: false });
+                listaPessoas.push({ nome, pedaços: pedacos, pago: false, valor: 0 });
                 const tabela = document.getElementById('listaPessoas');
                 const novaLinha = document.createElement('tr');
                 novaLinha.innerHTML = `
@@ -254,6 +254,7 @@
                     <td><button onclick="marcarPago(${listaPessoas.length - 1})">Marcar como Pago</button></td>`; 
                 tabela.appendChild(novaLinha);
                 fecharModal(); // Fecha o modal após adicionar
+                atualizarTabela(); // Atualiza a tabela
             } else {
                 alert("Por favor, insira um nome válido e a quantidade de pedaços.");
             }
@@ -264,7 +265,7 @@
             const novoNome = prompt("Editar Nome", pessoa.nome);
             const novosPedacos = prompt("Editar Pedaços", pessoa.pedaços);
             if (novoNome && !isNaN(novosPedacos)) {
-                listaPessoas[index] = { nome: novoNome, pedaços: parseInt(novosPedacos), pago: pessoa.pago };
+                listaPessoas[index] = { nome: novoNome, pedaços: parseInt(novosPedacos), pago: pessoa.pago, valor: pessoa.valor };
                 atualizarTabela();
             } else {
                 alert("Entrada inválida.");
@@ -273,7 +274,7 @@
 
         function marcarPago(index) {
             listaPessoas[index].pago = !listaPessoas[index].pago;
-            atualizarTabela();
+            atualizarTabela();  // Atualiza automaticamente quando o status "Pago" for alterado
         }
 
         function calcular() {
@@ -282,51 +283,37 @@
             const refrigerante = parseFloat(document.getElementById('refrigerante').value);
             const totalPedaços = listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0);
             const totalPizzas = Math.ceil(totalPedaços / 8);
-            const valorTotal = (precoPizza + frete + refrigerante) * totalPizzas;
-
+            const valorTotal = (precoPizza * totalPizzas) + frete + refrigerante;
+            
+            let resultadoHTML = `
+                <p>Total de Pessoas: ${listaPessoas.length}</p>
+                <p>Total de Pedaços: ${totalPedaços}</p>
+                <p>Total de Pizzas: ${totalPizzas}</p>
+                <p>Valor Total: R$ ${valorTotal.toFixed(2)}</p>
+            `;
+            
+            // Calcular o valor individual a ser pago por cada pessoa
             listaPessoas.forEach(pessoa => {
-                pessoa.valor = (precoPizza * pessoa.pedaços / 8) + (frete / totalPizzas) + (refrigerante / totalPizzas);
+                pessoa.valor = (pessoa.pedaços / totalPedaços) * valorTotal;
             });
+            
+            let totalPago = listaPessoas.filter(p => p.pago).length;
+            let valorPago = totalPago * valorTotal / listaPessoas.length;
+            resultadoHTML += `<p>Total Pago: R$ ${valorPago.toFixed(2)}</p>`;
+            document.getElementById('resultado').innerHTML = resultadoHTML;
 
-            const totalPedaçosFaltando = (totalPizzas * 8) - totalPedaços;
-            const pedacosFaltandoMensagem = totalPedaçosFaltando > 0 
-                ? `Ainda faltam ${totalPedaçosFaltando} pedaços para a próxima pizza!`
-                : 'Não faltam pedaços para a próxima pizza!';
-
-            document.getElementById('resultado').innerHTML =  
-                `<p>Total de pessoas: ${listaPessoas.length}</p>
-                <p>Total de pedaços: ${totalPedaços}</p>
-                <p>Total de pizzas: ${totalPizzas}</p>
-                <p>Total a pagar (com frete e refrigerante): R$ ${valorTotal.toFixed(2)}</p>
-                <p>${pedacosFaltandoMensagem}</p>
-                <h4>Detalhamento</h4>
-                <ul>
-                    ${listaPessoas.map(pessoa => `
-                        <li>${pessoa.nome}: R$ ${pessoa.valor.toFixed(2)} (${pessoa.pedaços} pedaços) ${pessoa.pago ? '(Pago)' : '(Não Pago)'}</li>
-                    `).join('')}
-                </ul>`;
-        }
-
-        function salvarPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text('Calculadora de Pizza', 20, 20);
-            doc.text(`Total a pagar: R$ ${document.getElementById('resultado').innerText.split("R$ ")[1].split("\n")[0]}`, 20, 30);
-            doc.text('Detalhamento:', 20, 40);
-            listaPessoas.forEach((pessoa, i) => {
-                doc.text(`${i+1}. ${pessoa.nome}: R$ ${pessoa.valor.toFixed(2)} (${pessoa.pedaços} pedaços)`, 20, 50 + (i * 10));
-            });
-            doc.save('calculadora_pizza.pdf');
+            atualizarTabela();  // Atualiza a tabela com os valores corretos
         }
 
         function limparTabela() {
             listaPessoas = [];
+            document.getElementById('listaPessoas').innerHTML = '';
             atualizarTabela();
         }
 
         function atualizarTabela() {
             const tabela = document.getElementById('listaPessoas');
-            tabela.innerHTML = '';
+            tabela.innerHTML = ''; // Limpa a tabela antes de atualizar
             listaPessoas.forEach((pessoa, index) => {
                 const novaLinha = document.createElement('tr');
                 novaLinha.innerHTML = `
@@ -334,9 +321,19 @@
                     <td>${pessoa.pedaços}</td>
                     <td>R$ ${pessoa.valor.toFixed(2)}</td>
                     <td><button onclick="editarPessoa(${index})">Editar</button></td>
-                    <td><button onclick="marcarPago(${index})">Marcar como Pago</button></td>`; 
+                    <td><button onclick="marcarPago(${index})">${pessoa.pago ? 'Pago' : 'Marcar como Pago'}</button></td>`;
                 tabela.appendChild(novaLinha);
             });
+        }
+
+        function salvarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Lista de Pessoas", 10, 10);
+            listaPessoas.forEach((pessoa, index) => {
+                doc.text(`Pessoa: ${pessoa.nome} - Pedaços: ${pessoa.pedaços} - Valor a Pagar: R$ ${pessoa.valor.toFixed(2)}`, 10, 20 + (index * 10));
+            });
+            doc.save("pessoas.pdf");
         }
     </script>
 </body>
