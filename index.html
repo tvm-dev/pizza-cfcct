@@ -193,6 +193,7 @@
                     <th>Pedaços</th>
                     <th>Valor a Pagar (R$)</th>
                     <th>Editar</th>
+                    <th>Pago?</th> <!-- Coluna para marcar quem pagou -->
                 </tr>
             </thead>
             <tbody id="listaPessoas"></tbody>
@@ -242,10 +243,15 @@
             const nome = document.getElementById('nomePessoa').value;
             const pedacos = parseInt(document.getElementById('pedacosPessoa').value);
             if (nome && !isNaN(pedacos)) {
-                listaPessoas.push({ nome, pedaços: pedacos });
+                listaPessoas.push({ nome, pedaços: pedacos, pago: false });
                 const tabela = document.getElementById('listaPessoas');
                 const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `<td>${nome}</td><td>${pedacos}</td><td>R$ 0,00</td><td><button onclick="editarPessoa(${listaPessoas.length - 1})">Editar</button></td>`; 
+                novaLinha.innerHTML = `
+                    <td>${nome}</td>
+                    <td>${pedacos}</td>
+                    <td>R$ 0,00</td>
+                    <td><button onclick="editarPessoa(${listaPessoas.length - 1})">Editar</button></td>
+                    <td><button onclick="marcarPago(${listaPessoas.length - 1})">Marcar como Pago</button></td>`; 
                 tabela.appendChild(novaLinha);
                 fecharModal(); // Fecha o modal após adicionar
             } else {
@@ -258,71 +264,79 @@
             const novoNome = prompt("Editar Nome", pessoa.nome);
             const novosPedacos = prompt("Editar Pedaços", pessoa.pedaços);
             if (novoNome && !isNaN(novosPedacos)) {
-                listaPessoas[index] = { nome: novoNome, pedaços: parseInt(novosPedacos) };
+                listaPessoas[index] = { nome: novoNome, pedaços: parseInt(novosPedacos), pago: pessoa.pago };
                 atualizarTabela();
             } else {
                 alert("Entrada inválida.");
             }
         }
 
+        function marcarPago(index) {
+            listaPessoas[index].pago = !listaPessoas[index].pago;
+            atualizarTabela();
+        }
+
         function calcular() {
             const precoPizza = parseFloat(document.getElementById('precoPizza').value);
             const frete = parseFloat(document.getElementById('frete').value);
             const refrigerante = parseFloat(document.getElementById('refrigerante').value);
-            
-            // Total de pedaços consumidos
             const totalPedaços = listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0);
-            // Calcular o total de pizzas necessárias
-            const totalPizzas = Math.ceil(totalPedaços / 8); 
-            
-            // Cálculo do preço total (pizza + frete + refrigerante)
-            const valorPizzaPorPessoa = precoPizza / 8; // Preço por pedaço
-            const valorFretePorPessoa = frete / totalPizzas;
-            const valorRefrigerantePorPessoa = refrigerante / totalPizzas;
+            const totalPizzas = Math.ceil(totalPedaços / 8);
+            const valorTotal = (precoPizza + frete + refrigerante) * totalPizzas;
 
-            // Preencher o valor para cada pessoa
             listaPessoas.forEach(pessoa => {
-                pessoa.valor = (valorPizzaPorPessoa * pessoa.pedaços) + valorFretePorPessoa + valorRefrigerantePorPessoa;
+                pessoa.valor = (precoPizza * pessoa.pedaços / 8) + (frete / totalPizzas) + (refrigerante / totalPizzas);
             });
 
-            // Mensagem sobre a quantidade de pedaços
             const totalPedaçosFaltando = (totalPizzas * 8) - totalPedaços;
-            const mensagem = totalPedaçosFaltando > 0 ? `Faltam ${totalPedaçosFaltando} pedaços para a pizza ser completa.` : "A pizza está completa!";
-            let resultado = `<strong>Total de pizzas: ${totalPizzas}</strong><br>${mensagem}<br><br>`;
-            
-            listaPessoas.forEach((pessoa, index) => {
-                resultado += `<strong>${pessoa.nome}</strong> vai pagar R$ ${pessoa.valor.toFixed(2)} por ${pessoa.pedaços} pedaços.<br>`;
-            });
-            
-            document.getElementById('resultado').innerHTML = resultado;
-            atualizarTabela();
-        }
+            const pedacosFaltandoMensagem = totalPedaçosFaltando > 0 
+                ? `Ainda faltam ${totalPedaçosFaltando} pedaços para a próxima pizza!`
+                : 'Não faltam pedaços para a próxima pizza!';
 
-        function atualizarTabela() {
-            const tabela = document.getElementById('listaPessoas');
-            tabela.innerHTML = ''; // Limpa a tabela
-            listaPessoas.forEach((pessoa, index) => {
-                const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `<td>${pessoa.nome}</td><td>${pessoa.pedaços}</td><td>R$ ${pessoa.valor.toFixed(2)}</td><td><button onclick="editarPessoa(${index})">Editar</button></td>`;
-                tabela.appendChild(novaLinha);
-            });
+            document.getElementById('resultado').innerHTML =  
+                `<p>Total de pessoas: ${listaPessoas.length}</p>
+                <p>Total de pedaços: ${totalPedaços}</p>
+                <p>Total de pizzas: ${totalPizzas}</p>
+                <p>Total a pagar (com frete e refrigerante): R$ ${valorTotal.toFixed(2)}</p>
+                <p>${pedacosFaltandoMensagem}</p>
+                <h4>Detalhamento</h4>
+                <ul>
+                    ${listaPessoas.map(pessoa => `
+                        <li>${pessoa.nome}: R$ ${pessoa.valor.toFixed(2)} (${pessoa.pedaços} pedaços) ${pessoa.pago ? '(Pago)' : '(Não Pago)'}</li>
+                    `).join('')}
+                </ul>`;
         }
 
         function salvarPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.text("Relatório de Pizza", 20, 10);
-            doc.text(`Total de pizzas: ${Math.ceil(listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0) / 8)}`, 20, 20);
-            listaPessoas.forEach((pessoa, index) => {
-                doc.text(`Pessoa ${index + 1}: ${pessoa.nome} - ${pessoa.pedaços} pedaços - R$ ${pessoa.valor.toFixed(2)}`, 20, 30 + index * 10);
+            doc.text('Calculadora de Pizza', 20, 20);
+            doc.text(`Total a pagar: R$ ${document.getElementById('resultado').innerText.split("R$ ")[1].split("\n")[0]}`, 20, 30);
+            doc.text('Detalhamento:', 20, 40);
+            listaPessoas.forEach((pessoa, i) => {
+                doc.text(`${i+1}. ${pessoa.nome}: R$ ${pessoa.valor.toFixed(2)} (${pessoa.pedaços} pedaços)`, 20, 50 + (i * 10));
             });
-            doc.save("relatorio_pizza.pdf");
+            doc.save('calculadora_pizza.pdf');
         }
 
         function limparTabela() {
             listaPessoas = [];
             atualizarTabela();
-            document.getElementById('resultado').innerHTML = '';
+        }
+
+        function atualizarTabela() {
+            const tabela = document.getElementById('listaPessoas');
+            tabela.innerHTML = '';
+            listaPessoas.forEach((pessoa, index) => {
+                const novaLinha = document.createElement('tr');
+                novaLinha.innerHTML = `
+                    <td>${pessoa.nome}</td>
+                    <td>${pessoa.pedaços}</td>
+                    <td>R$ ${pessoa.valor.toFixed(2)}</td>
+                    <td><button onclick="editarPessoa(${index})">Editar</button></td>
+                    <td><button onclick="marcarPago(${index})">Marcar como Pago</button></td>`; 
+                tabela.appendChild(novaLinha);
+            });
         }
     </script>
 </body>
