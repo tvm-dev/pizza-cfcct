@@ -3,338 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Pizza</title>
+    <title>Boas-vindas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            background: linear-gradient(45deg, #6a11cb, #2575fc);
-            padding: 20px;
+        * {
             margin: 0;
-            color: #120e0e;
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #2575fc;
+            flex-direction: column;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
         .container {
-            max-width: 600px;
-            background: #c7eef0;
-            padding: 30px;
-            margin: auto;
+            text-align: center;
+            background-color: #ffffff;
+            padding: 40px 60px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 550px;
         }
-        .input-group label {
-            display: block;
-            margin: 10px 0;
-            font-size: 16px;
-            font-weight: bold;
-            color: #100808;
+
+        h1 {
+            margin-top: 0;
+            color: #007bff;
+            font-size: 36px;
+            font-weight: 700;
         }
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border: 2px solid #0e7abd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        button {
+
+        #welcome-message {
             margin-top: 20px;
-            padding: 12px;
-            width: 100%;
-            background: linear-gradient(45deg, #46e8ee, #1b67eb);
-            color: #fefdfe;
-            border: none;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        button:hover {
-            background: linear-gradient(45deg, #3e394a, #4a0547);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #679ff9;
-            padding: 12px;
-            font-size: 16px;
-        }
-        th {
-            background-color: #007bff;
-            color: rgb(250, 248, 248);
-        }
-        #resultado {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            font-size: 18px;
             color: #333;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        footer {
-            font-size: 14px;
-            color: #f0e6e6;
-            margin-top: 30px;
+            font-size: 22px;
         }
 
-        /* Modal de Adição de Pessoa */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
+        img {
             width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-            padding-top: 60px;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .modal-content input {
-            width: 80%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 2px solid #0e7abd;
-            font-size: 16px;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
+            max-width: 350px;
             cursor: pointer;
+            border-radius: 12px;
+            margin-top: 20px;
         }
 
-        /* Estilo para o botão Limpar Tabela */
-        #limparTabela {
-            margin-top: 10px;
-            padding: 8px;
-            width: 100%;
-            background: linear-gradient(45deg, #f44336, #d32f2f);
-            color: #fefdfe;
+        .btn, .bottom-btn {
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
             border: none;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 14px 30px;
+            text-align: center;
+            font-size: 18px;
             cursor: pointer;
+            border-radius: 10px;
+            margin-top: 30px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        #limparTabela:hover {
-            background: linear-gradient(45deg, #c62828, #b71c1c);
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color: #003366;
+            color: white;
+            padding: 12px 0;
+            font-size: 14px;
+            font-weight: 300;
         }
 
-        /* Estilo da imagem */
-        .logo {
-            width: 100px;
-            height: 100px;
-            position: absolute;
-            left: 20px;
-            top: 30px;
-            transition: transform 2s ease-in-out;
-        }
-
-        /* Ajuste para a imagem e o título */
-        h2 {
-            margin-top: 130px; /* Ajuste para dar um espaçamento adequado */
-        }
-
-        /* Movimento da imagem com o comando em JavaScript */
-        .moverLogo {
-            transform: translateX(400px); /* Mova a imagem para a direita */
+        #loading-icon {
+            display: none;
+            width: 50px;
+            height: 50px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <img class="logo" src="https://play-lh.googleusercontent.com/RtNN_ny-8YJb9jpvdxkmG3Cc7gGep-kKCJxPOJOj-W6uk7SqLge2UsgZXFn25-APAhH2" alt="Logo">
-        <h2>Calculadora de Pizza</h2>
-        <div class="input-group">
-            <label for="precoPizza">Preço da Pizza: R$</label>
-            <input type="number" id="precoPizza" placeholder="Digite o preço da pizza">
-        </div>
-        <div class="input-group">
-            <label for="frete">Frete: R$</label>
-            <input type="number" id="frete" placeholder="Digite o valor do frete">
-        </div>
-        <div class="input-group">
-            <label for="refrigerante">Refrigerante: R$</label>
-            <input type="number" id="refrigerante" placeholder="Digite o valor do refrigerante">
-        </div>
-
-        <h3>Pessoas e Pedaços</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Pedaços</th>
-                    <th>Valor a Pagar (R$)</th>
-                    <th>Editar</th>
-                    <th>Pago?</th> <!-- Coluna para marcar quem pagou -->
-                </tr>
-            </thead>
-            <tbody id="listaPessoas"></tbody>
-        </table>
-        <button onclick="mostrarModal()">Adicionar Pessoa</button>
-        <button onclick="calcular()">Calcular</button>
-        <button onclick="salvarPDF()">Salvar em PDF</button>
-
-        <div id="resultado"></div>
-
-        <button onclick="window.location.href='sobre_app.html'">Sobre o App</button>
-        <button onclick="window.location.href='sobre_desenvolvedor.html'">Sobre o Desenvolvedor</button>
-
-        <!-- Botão Limpar Tabela abaixo da tabela de pessoas -->
-        <button id="limparTabela" onclick="limparTabela()">Limpar Tabela</button>
+        <h1><i class="fas fa-pizza-slice"></i> Boas-vindas ao Somador de Pizza</h1>
+        <h2 id="welcome-message" style="display: none;">Bem-vindo(a)! Aproveite sua experiência!</h2>
+        <img src="https://img.freepik.com/fotos-gratis/flat-leigos-pizza-em-uma-caixa-com-calculadora_23-2148247948.jpg" alt="Imagem clicável" id="image">
+        <button id="action-btn" class="btn" style="display: none;" onclick="startLoading()">Ir para o Somador de Pizza</button>
     </div>
+
+    <!-- Botão adicional abaixo da moldura -->
+    <button class="bottom-btn" onclick="startLoading()">Ir para o Somador de Pizza</button>
+
+    <!-- Ícone de carregamento -->
+    <img id="loading-icon" src="https://w7.pngwing.com/pngs/321/641/png-transparent-iphone-5s-ios-progress-bar-icon-load-the-map-loading-miscellaneous-tshirt-angle.png" alt="Carregando">
 
     <footer>
-        Professor Thiago - <a href="https://thiago.grupokhan.com.br" target="_blank" style="color: #fff;">Clique para acessar o site</a>
+        <i class="fas fa-copyright"></i> Somador de Pizza. Todos os direitos reservados.
     </footer>
 
-    <!-- Modal para adicionar pessoa -->
-    <div id="modalPessoa" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="fecharModal()">&times;</span>
-            <h3>Adicionar Pessoa</h3>
-            <input type="text" id="nomePessoa" placeholder="Digite o nome da pessoa">
-            <input type="number" id="pedacosPessoa" placeholder="Quantos pedaços a pessoa vai comer?">
-            <button onclick="adicionarPessoaModal()">Adicionar</button>
-        </div>
-    </div>
-
-    <!-- Corrigir a inclusão da CDN do jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
-        let listaPessoas = [];
+        document.getElementById("image").addEventListener("click", function() {
+            document.getElementById("welcome-message").style.display = "block";
+            document.getElementById("action-btn").style.display = "inline-block";
+        });
 
-        function mostrarModal() {
-            document.getElementById('modalPessoa').style.display = "block";
-        }
-
-        function fecharModal() {
-            document.getElementById('modalPessoa').style.display = "none";
-        }
-
-        function adicionarPessoaModal() {
-            const nome = document.getElementById('nomePessoa').value;
-            const pedacos = parseInt(document.getElementById('pedacosPessoa').value);
-            if (nome && !isNaN(pedacos)) {
-                listaPessoas.push({ nome, pedaços: pedacos, pago: false, valor: 0 });
-                const tabela = document.getElementById('listaPessoas');
-                const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `
-                    <td>${nome}</td>
-                    <td>${pedacos}</td>
-                    <td>R$ 0,00</td>
-                    <td><button onclick="editarPessoa(${listaPessoas.length - 1})">Editar</button></td>
-                    <td><button onclick="marcarPago(${listaPessoas.length - 1})">Marcar como Pago</button></td>`; 
-                tabela.appendChild(novaLinha);
-                fecharModal(); // Fecha o modal após adicionar
-                atualizarTabela(); // Atualiza a tabela
-            } else {
-                alert("Por favor, insira um nome válido e a quantidade de pedaços.");
-            }
-        }
-
-        function editarPessoa(index) {
-            const pessoa = listaPessoas[index];
-            const novoNome = prompt("Editar Nome", pessoa.nome);
-            const novosPedacos = prompt("Editar Pedaços", pessoa.pedaços);
-            if (novoNome && !isNaN(novosPedacos)) {
-                listaPessoas[index] = { nome: novoNome, pedaços: parseInt(novosPedacos), pago: pessoa.pago, valor: pessoa.valor };
-                atualizarTabela();
-            } else {
-                alert("Entrada inválida.");
-            }
-        }
-
-        function marcarPago(index) {
-            listaPessoas[index].pago = !listaPessoas[index].pago;
-            atualizarTabela();  // Atualiza automaticamente quando o status "Pago" for alterado
-        }
-
-        function calcular() {
-            const precoPizza = parseFloat(document.getElementById('precoPizza').value);
-            const frete = parseFloat(document.getElementById('frete').value);
-            const refrigerante = parseFloat(document.getElementById('refrigerante').value);
-            const totalPedaços = listaPessoas.reduce((acc, pessoa) => acc + pessoa.pedaços, 0);
-            const totalPizzas = Math.ceil(totalPedaços / 8);
-            const valorTotal = (precoPizza * totalPizzas) + frete + refrigerante;
-            
-            let resultadoHTML = `
-                <p>Total de Pessoas: ${listaPessoas.length}</p>
-                <p>Total de Pedaços: ${totalPedaços}</p>
-                <p>Total de Pizzas: ${totalPizzas}</p>
-                <p>Valor Total: R$ ${valorTotal.toFixed(2)}</p>
-            `;
-            
-            // Calcular o valor individual a ser pago por cada pessoa
-            listaPessoas.forEach(pessoa => {
-                pessoa.valor = (pessoa.pedaços / totalPedaços) * valorTotal;
-            });
-            
-            let totalPago = listaPessoas.filter(p => p.pago).length;
-            let valorPago = totalPago * valorTotal / listaPessoas.length;
-            resultadoHTML += `<p>Total Pago: R$ ${valorPago.toFixed(2)}</p>`;
-            document.getElementById('resultado').innerHTML = resultadoHTML;
-
-            atualizarTabela();  // Atualiza a tabela com os valores corretos
-        }
-
-        function limparTabela() {
-            listaPessoas = [];
-            document.getElementById('listaPessoas').innerHTML = '';
-            atualizarTabela();
-        }
-
-        function atualizarTabela() {
-            const tabela = document.getElementById('listaPessoas');
-            tabela.innerHTML = ''; // Limpa a tabela antes de atualizar
-            listaPessoas.forEach((pessoa, index) => {
-                const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `
-                    <td>${pessoa.nome}</td>
-                    <td>${pessoa.pedaços}</td>
-                    <td>R$ ${pessoa.valor.toFixed(2)}</td>
-                    <td><button onclick="editarPessoa(${index})">Editar</button></td>
-                    <td><button onclick="marcarPago(${index})">${pessoa.pago ? 'Pago' : 'Marcar como Pago'}</button></td>`;
-                tabela.appendChild(novaLinha);
-            });
-        }
-
-        function salvarPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text("Lista de Pessoas", 10, 10);
-            listaPessoas.forEach((pessoa, index) => {
-                doc.text(`Pessoa: ${pessoa.nome} - Pedaços: ${pessoa.pedaços} - Valor a Pagar: R$ ${pessoa.valor.toFixed(2)}`, 10, 20 + (index * 10));
-            });
-            doc.save("pessoas.pdf");
+        function startLoading() {
+            // Exibe o ícone de carregamento
+            document.getElementById("loading-icon").style.display = "block";
+            // Redireciona após 2 segundos
+            setTimeout(function() {
+                window.location.href = 'somador_pizza.html';
+            }, 2000);
         }
     </script>
+
 </body>
 </html>
