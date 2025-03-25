@@ -150,6 +150,7 @@
                     <th>Nome <span class="emoji">🧑‍🍳</span></th>
                     <th>Pedaços <span class="emoji">🍕</span></th>
                     <th>Ação</th>
+                    <th>Status</th> <!-- Coluna de status -->
                 </tr>
             </thead>
             <tbody id="listaPessoas"></tbody>
@@ -168,7 +169,7 @@
             const nome = prompt("Digite o nome da pessoa:");
             const pedaços = parseInt(prompt("Digite a quantidade de pedaços:")) || 0;
             if (nome && pedaços > 0) {
-                listaPessoas.push({ nome, pedaços });
+                listaPessoas.push({ nome, pedaços, pago: false }); // Adicionando status de pagamento
                 atualizarLista();
             }
         }
@@ -183,7 +184,12 @@
                 atualizarLista();
             }
         }
-        
+
+        function marcarPago(index) {
+            listaPessoas[index].pago = !listaPessoas[index].pago; // Alterando o status de pago
+            atualizarLista();
+        }
+
         function atualizarLista() {
             const tbody = document.getElementById("listaPessoas");
             tbody.innerHTML = "";
@@ -193,6 +199,7 @@
                         <td>${pessoa.nome}</td>
                         <td>${pessoa.pedaços}</td>
                         <td><span class="editar-btn" onclick="editarPessoa(${index})">Editar</span></td>
+                        <td><button onclick="marcarPago(${index})" class="pago-btn">${pessoa.pago ? 'Pago ✅' : 'Marcar Pago 💸'}</button></td>
                     </tr>
                 `;
             });
